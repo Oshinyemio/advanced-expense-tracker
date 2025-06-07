@@ -47,14 +47,16 @@ Try it here: [Expense Tracker Web App](https://d1kwramx1iu2rs.cloudfront.net/)
 advanced-expense-tracker/
 │
 ├── assets/
-│ ├── (add screenshots here)
-│ └── (add any diagrams if needed)
+│   ├── api-gateway-authorizer.png
+│   ├── cognito-user-pool.png
+│   ├── dynamodb-table.png
+│   ├── lambda-iam-policy.png
+│   └── tracker-screenshot-placeholder.png
 │
 ├── backend/
 │ ├── AddExpenseFunction.py # Lambda to add a new expense and save to S3
 │ ├── GetExpenseFunction.py # Lambda to retrieve expenses from DynamoDB
-│ ├── ExportExpenseFunction.py # Lambda to export expenses as CSV
-│ └── (any additional Lambda code)
+│ └── ExportExpenseFunction.py # Lambda to export expenses as CSV
 │
 ├── frontend/
 │ ├── login.html # Login / Sign-Up page using Cognito
