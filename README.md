@@ -34,6 +34,13 @@ A multi-user, serverless expense tracker built using AWS services. Users can sig
 This project follows a serverless architecture using AWS managed services for scalability and cost-efficiency.
 ![architecture-diagram](assets/architecture-diagram.png)
 
+---
+
+## 🌐 Live Demo
+Try it here: [Expense Tracker Web App](https://your-cloudfront-link.cloudfront.net)
+
+---
+
 ## 📂 Project Structure
 
 ```
@@ -68,11 +75,6 @@ advanced-expense-tracker/
 - Amazon Cognito User Pool and App Client handle sign-up, sign-in, and JWT issuance.  
 - An S3 bucket (e.g., `expense-tracker-data-ope`) stores JSON expense files and uploaded receipt images.  
 - CloudFront distribution serves static frontend assets from S3 with HTTPS and caching.
-
----
-
-## 🌐 Live Demo
-Try it here: [Expense Tracker Web App](https://your-cloudfront-link.cloudfront.net)
 
 ---
 
