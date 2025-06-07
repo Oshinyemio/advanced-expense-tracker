@@ -120,8 +120,8 @@
     document.addEventListener("DOMContentLoaded", function() {
       // ==== Cognito Configuration for sign‑out ====
       const poolData = {
-        UserPoolId: 'us-east-1_ABCDEF123',       // ← your User Pool ID
-        ClientId:   '4ijklmn56opqrstu7vwx89yzab' // ← your App Client ID
+        UserPoolId: 'COGNITO_USER_POOL_ID',       // ← your User Pool ID
+        ClientId:   'COGNITO_APP_CLIENT_ID' // ← your App Client ID
       };
       const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
