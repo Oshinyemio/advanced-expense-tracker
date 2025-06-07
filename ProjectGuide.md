@@ -572,14 +572,12 @@ s3://expense-tracker-data-ope/expenses/{userId}/{timestamp}_{UUID}.json
 #### 7.2 Verify S3 Writes
 
 1. Add an expense via `tracker.html`.
-2. Go to **S3 Console** → **expense-tracker-data-ope** → **expenses/\`**.
+2. Go to **S3 Console** → **expense-tracker-data-user** → **expenses/\`**.
 3. You should see a folder for your `userId` containing one or more `.json` files.
 4. Open a JSON file in the S3 console to confirm its contents.
 
 > **Common Mistake #10**: Bucket policy not permitting `s3:PutObject`.
 > **Check**: After adding, if no file appears, check CloudWatch Logs for “AccessDenied”.
-
-![S3 Expense Files](assets/s3-expense-files.png)
 
 ---
 
@@ -630,17 +628,11 @@ To import **all JSON files** under `expenses/`, use:
 3. Click **Connect** → QuickSight will crawl all JSON files.
 4. Create an analysis: choose fields `userId`, `timestamp`, `amount`, `category`, `description`.
 
-> **Image Placeholder:**
-> `![QuickSight Dataset Import](assets/quicksight-dataset-import.png)`
-
 #### 8.4 Build Visualizations
 
 * **Bar Chart**: Sum of `amount` by `category`.
 * **Line Chart**: Time-series of monthly total spend.
 * **Table/Filter**: Filter by `userId` to compare users.
-
-> **Image Placeholder:**
-> `![QuickSight Expense Dashboard](assets/quicksight-dashboard.png)`
 
 ---
 
@@ -681,21 +673,6 @@ To import **all JSON files** under `expenses/`, use:
    * Mistake: After updating `tracker.html`, old version still loads.
    * Check: In CloudFront → Invalidations → create invalidation for `/login.html`, `/tracker.html`.
 
----
-
-## 📸 Image Placeholders
-
-* `![Cognito User Pool Settings](assets/cognito-user-pool.png)`
-* `![DynamoDB Table Configuration](assets/dynamodb-table.png)`
-* `![Lambda IAM Policy](assets/lambda-iam-policy.png)`
-* `![API Gateway Cognito Authorizer](assets/api-gateway-authorizer.png)`
-* `![S3 Expense Files](assets/s3-expense-files.png)`
-* `![QuickSight Dataset Import](assets/quicksight-dataset-import.png)`
-* `![QuickSight Expense Dashboard](assets/quicksight-dashboard.png)`
-* `![CORS Error in Browser Console](assets/cors-error-console.png)`
-* `![CloudFront Distribution Settings](assets/cloudfront-settings.png)`
-
-*(Replace `assets/...` with your actual screenshot paths.)*
 
 ---
 
