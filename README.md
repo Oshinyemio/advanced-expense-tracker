@@ -113,7 +113,7 @@ advanced-expense-tracker/
    - Deploy the API to a stage (e.g., `prod`) and note the **Invoke URL**.  
 
 5. **Create and Configure S3 Bucket**  
-   - Create an S3 bucket (e.g., `expense-tracker-data-ope`).  
+   - Create an S3 bucket (e.g., `expense-tracker-data-user`).  
    - Enable public read access only for static assets if hosting frontend here.  
    - Configure bucket policy to allow Lambda to put objects.  
 
@@ -144,6 +144,11 @@ Here’s a snapshot of the Tracker Dashboard when viewing expenses:
 ![Tracker Dashboard Screenshot](assets/tracker-screenshot-placeholder.png)
 
 _Add your own screenshot here once available._
+
+---
+
+## 🌐 Live Demo
+Try it here: [Expense Tracker Web App](https://your-cloudfront-link.cloudfront.net)
 
 ---
 
