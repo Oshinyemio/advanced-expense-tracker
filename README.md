@@ -37,7 +37,7 @@ This project follows a serverless architecture using AWS managed services for sc
 ---
 
 ## 🌐 Live Demo
-Try it here: [Expense Tracker Web App](https://your-cloudfront-link.cloudfront.net)
+Try it here: [Expense Tracker Web App](d1kwramx1iu2rs.cloudfront.net)
 
 ---
 
