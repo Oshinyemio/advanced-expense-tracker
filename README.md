@@ -150,8 +150,6 @@ Here’s a snapshot of the Tracker Dashboard when viewing expenses:
 
 ![Tracker Dashboard Screenshot](assets/tracker-screenshot-placeholder.png)
 
-_Add your own screenshot here once available._
-
 ---
 
 ## 📬 Contact
