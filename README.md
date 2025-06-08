@@ -96,112 +96,62 @@ advanced-expense-tracker/
 
 ### 🛠️ Deploy Backend
 
-### 1. **Create DynamoDB Table**
+## Backend Deployment Instructions (Updated)
 
-* **Table name:** `Expenses`
-* **Partition key:** `userId` (String)
-* **Sort key:** `timestamp` (String)
+### 1. Create DynamoDB Table
 
----
+* Table name: `Expenses`
+* Partition key: `userId` (String)
+* Sort key: `timestamp` (String)
 
-### 2. **Deploy Lambda Functions**
+### 2. Deploy Lambda Functions
 
-Create three AWS Lambda functions using **Python 3.x runtime**:
+* Create `AddExpenseFunction` (Python 3.x) to handle POST requests
+* Create `GetExpenseFunction` (Python 3.x) to handle GET requests
+* Create `ExportExpenseFunction` (Python 3.x) to export expense data to S3
+* All function code is located in the `backend/` folder
 
-* `AddExpenseFunction` → handles POST requests
-* `GetExpenseFunction` → handles GET requests
-* `ExportExpenseFunction` → exports expense data to S3
+### 3. IAM Role
 
-All function code can be found in the `backend/` folder.
+* Create a role named `Full_DynamoDB_S3_Access`
+* Attach managed policies: `AmazonDynamoDBFullAccess` and `AmazonS3FullAccess`
+* ⚠️ Note: This approach does not follow least privilege but simplifies setup for demo purposes
 
-#### ✅ IAM Role
+### 4. Set Up Amazon Cognito
 
-Create a role called `Full_DynamoDB_S3_Access` with the following managed policies:
+* Create a User Pool and configure required attributes (e.g., email)
+* Create an App Client (no client secret) and note the User Pool ID and App Client ID
+* In Lambda functions, extract `userId` from the JWT token provided by Cognito
+* 
+### 5. Configure API Gateway
 
-* `AmazonDynamoDBFullAccess`
-* `AmazonS3FullAccess`
+* Create a new REST API
+* Import the OpenAPI spec from `infrastructure/ExpenseTracker_API-prod-oas30.yaml`
+* Enable CORS for `POST /expenses`, `GET /expenses`, and `GET /export-expenses`
+* Set Authorization to use Cognito User Pool Authorizer with Token Source: `Authorization`
+* Configure stage-level throttling (e.g., 100 RPS, 200 burst)
+* Deploy the API to a stage (e.g., `prod`) and note the Invoke URL
 
-⚠️ **Note:** This approach does *not* follow the principle of least privilege but simplifies setup for learning/demo purposes.
+### 6. Create S3 Buckets
 
----
+* Create `user-expense-tracker-data` for storing JSON expense data; no public access
+* Grant permissions for Lambda to put objects and QuickSight to read objects
+* Create `user-expense-tracker-frontend` for hosting static files (`login.html` and `tracker.html`); enable public read access
+* (Optional) Enable versioning on `user-expense-tracker-frontend` to retain previous HTML versions
 
-### 3. **Set Up Amazon Cognito**
-
-* Create a **User Pool** (configure required attributes like `email`)
-* Create an **App Client** (no client secret)
-* Note your **User Pool ID** and **App Client ID**
-
-In your Lambda functions, extract `userId` from the **JWT token** provided by Cognito.
-
----
-
-### 4. **Configure API Gateway**
-
-* Create a new **REST API**
-* Import the OpenAPI spec from:
-  `infrastructure/ExpenseTracker_API-prod-oas30.yaml`
-
-#### 🔧 Setup:
-
-* Enable **CORS** for all methods (`POST /expenses`, `GET /expenses`, `GET /export-expenses`)
-
-* Set **Authorization** for endpoints:
-
-  * Use **Cognito User Pool Authorizer**
-  * Set **Token Source** to `Authorization` header
-
-* **Throttling:**
-
-  * Configure **Stage-level throttling** to limit request rates (recommended defaults: 100 RPS, 200 burst)
-
-* Deploy the API to a stage (e.g., `prod`)
-
-* Note your **Invoke URL**
-
----
-
-### 5. **Create S3 Buckets**
-
-#### 🔹 `user-expense-tracker-data`
-
-* Used to store JSON data exported by Lambda
-* **No public access**
-* Provide permissions to:
-
-  * Allow Lambda to put objects
-  * Allow Amazon QuickSight to read objects
-* ✅ Apply an appropriate bucket policy with `quicksight.amazonaws.com` as the principal
-* 🔐 Make sure to set `aws:SourceAccount` to your AWS account ID
-
-#### 🔹 `user-expense-tracker-frontend`
-
-* Stores static files (`login.html`, `tracker.html`)
-* **Public read access** to allow browsers to fetch assets
-* (Optional) Enable **versioning** to maintain access to previous HTML versions
-
----
-
-### 6. **Set Up CloudFront**
+### 7. Set Up CloudFront
 
 * Create a CloudFront distribution pointing to the `user-expense-tracker-frontend` S3 bucket
-* Set origin to **static website hosting endpoint** or use **Origin Access Identity (OAI)**
-* Configure the following:
+* Use the static website hosting endpoint or an Origin Access Identity (OAI)
+* Configure HTTP to redirect to HTTPS
+* Allow public access (no WAF)
+* Restrict geo-location to North America and Europe to stay within the free tier
 
-  * **Redirect HTTP to HTTPS**
-  * **Public access** (no WAF)
-  * **Restrict geo-location** to **North America and Europe** to stay within AWS free tier
+### 8. Configure QuickSight (Optional)
 
----
-
-### 7. **Configure QuickSight (Optional)**
-
-* Create a new dataset using **S3 as source**
-* Point to the `user-expense-tracker-data` bucket or a specific folder prefix
-* Build dashboards to visualize:
-
-  * Spending over time
-  * Category-based breakdowns
-  * CSV/JSON exports
+* Create a new QuickSight dataset using S3 as the source
+* Point to the `user-expense-tracker-data` bucket or a specific prefix
+* Build dashboards to visualize spending trends, category breakdowns, and exports
 
 ---
 
