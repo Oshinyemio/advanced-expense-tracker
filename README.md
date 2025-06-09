@@ -96,8 +96,6 @@ advanced-expense-tracker/
 
 ### 🛠️ Deploy Backend
 
-## Backend Deployment Instructions (Updated)
-
 ### 1. Create DynamoDB Table
 
 * Table name: `Expenses`
