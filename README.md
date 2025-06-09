@@ -114,7 +114,7 @@ advanced-expense-tracker/
 ### 3. IAM Role
 
 * Create a role named `Full_DynamoDB_S3_Access`
-* Attach managed policies: `AmazonDynamoDBFullAccess` and `AmazonS3FullAccess`
+* Attach managed policies: `AmazonDynamoDBFullAccess`, `AWSLambdaBasicExecutionRole` and `AmazonS3FullAccess`
 * ⚠️ Note: This approach does not follow least privilege but simplifies setup for demo purposes
 
 ### 4. Set Up Amazon Cognito
