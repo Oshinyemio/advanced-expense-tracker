@@ -168,7 +168,7 @@ advanced-expense-tracker/
 
 Here’s a snapshot of the Tracker Dashboard when viewing expenses:
 
-![Tracker Dashboard Screenshot](assets/tracker-screenshot-placeholder.png)
+![Tracker Dashboard Screenshot](assets/tracker-dashboard-sample.png)
 
 ---
 
