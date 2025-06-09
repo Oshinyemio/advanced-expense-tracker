@@ -32,7 +32,7 @@ A multi-user, serverless expense tracker built using AWS services. Users can sig
 
 ## 🏗️ Project Architecture
 This project follows a serverless architecture using AWS managed services for scalability and cost-efficiency.
-![architecture-diagram](assets/architecture-diagram.png)
+![architecture-diagram](assets/tracker-architecture.png)
 
 ---
 
