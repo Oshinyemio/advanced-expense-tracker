@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Expense Tracker – Your Dashboard</title>
-  <!-- Load Cognito SDK via jsDelivr (v5.2.4) for sign‑out -->
+  <!-- Load Cognito SDK via jsDelivr (v5.2.4) for sign-out -->
   <script src="https://cdn.jsdelivr.net/npm/amazon-cognito-identity-js@5.2.4/dist/amazon-cognito-identity.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Boogaloo&display=swap" rel="stylesheet">
   <style>
@@ -78,6 +78,11 @@
       color: red;
       margin-top: 8px;
     }
+    /* New: style override to hide the Download button initially */
+    #btnDownloadCSV {
+      display: none;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
@@ -114,14 +119,18 @@
     <button id="btnGetExpenses">View My Expenses</button>
     <div class="highlight" id="currentUserInfo"></div>
     <div id="output"></div>
+
+    <!-- New: Download as CSV Button (initially hidden) -->
+    <button id="btnDownloadCSV">Download as CSV</button>
+
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // ==== Cognito Configuration for sign‑out ====
+      // ==== Cognito Configuration for sign-out ====
       const poolData = {
-        UserPoolId: 'COGNITO_USER_POOL_ID',       // ← your User Pool ID
-        ClientId:   'COGNITO_APP_CLIENT_ID' // ← your App Client ID
+        UserPoolId: 'us-east-1_vaCGrHdNP',       // ← your User Pool ID
+        ClientId:   '6bg7sp0qr72fb23cvgto16fqqq' // ← your App Client ID
       };
       const userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
 
@@ -130,6 +139,9 @@
       const welcomeEl = document.getElementById("welcomeMsg");
       const userIdAddEl = document.getElementById("userIdAdd");
       const userIdGetEl = document.getElementById("userIdGet");
+      const outputEl = document.getElementById("output");
+      const infoEl = document.getElementById("currentUserInfo");
+      const downloadBtn = document.getElementById("btnDownloadCSV");
 
       function showStatus(msg, isError = true) {
         statusEl.style.color = isError ? "red" : "green";
@@ -148,7 +160,7 @@
       // Display welcome message
       welcomeEl.textContent = `Welcome, ${username}!`;
 
-      // Auto‑fill User ID fields with the username by default (but allow edits)
+      // Auto-fill User ID fields with the username by default (but allow edits)
       userIdAddEl.value = username;
       userIdGetEl.value = username;
 
@@ -210,14 +222,12 @@
         } catch (error) {
           console.error('❗ POST Error:', error);
           showStatus("❌ Network error");
-        }  
+        }
       });
 
       // ===== Get Expenses Handler =====
       document.getElementById("btnGetExpenses").addEventListener("click", async function() {
         const userId = userIdGetEl.value.trim();
-        const output = document.getElementById('output');
-        const info = document.getElementById('currentUserInfo');
         const token = sessionStorage.getItem('idToken');
 
         if (!token) {
@@ -230,16 +240,20 @@
           return;
         }
 
-        output.innerHTML = '🔄 Loading...';
-        info.textContent = `📋 Viewing expenses for: ${userId}`;
+        outputEl.innerHTML = '🔄 Loading...';
+        infoEl.textContent = `📋 Viewing expenses for: ${userId}`;
+        downloadBtn.style.display = 'none';       // hide until we know fetch succeeded
 
         try {
-          const raw = await fetch(`https://a47raonx05.execute-api.us-east-1.amazonaws.com/prod/expenses?userId=${encodeURIComponent(userId)}`, {
-            method: 'GET',
-            headers: {
-              'Authorization': token
+          const raw = await fetch(
+            `https://a47raonx05.execute-api.us-east-1.amazonaws.com/prod/expenses?userId=${encodeURIComponent(userId)}`,
+            {
+              method: 'GET',
+              headers: {
+                'Authorization': token
+              }
             }
-          });
+          );
 
           const data = await raw.json();
           console.log("📦 Full Response Body:", data);
@@ -250,21 +264,61 @@
 
           const expenses = data.expenses || data || [];
           if (expenses.length > 0) {
-            output.innerHTML = expenses.map(exp => `
+            outputEl.innerHTML = expenses.map(exp => `
               <div class="expense">
                 <strong>${exp.timestamp}</strong><br>
                 ${exp.category} – $${exp.amount}<br>
                 <em>${exp.description}</em>
               </div>
             `).join('');
+            // Show “Download as CSV” button now that we have results
+            setupDownloadButton(userId, token);
+            downloadBtn.style.display = 'block';
           } else {
-            output.innerHTML = '<p>📭 No expenses found.</p>';
+            outputEl.innerHTML = '<p>📭 No expenses found.</p>';
+            downloadBtn.style.display = 'none';
           }
         } catch (error) {
           console.error('❗ GET Error:', error);
-          output.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+          outputEl.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+          downloadBtn.style.display = 'none';
         }
       });
+
+      // ===== Setup Download Button for CSV Export =====
+      function setupDownloadButton(userId, token) {
+        downloadBtn.onclick = async function() {
+          // Construct the export URL
+          const exportUrl = `https://a47raonx05.execute-api.us-east-1.amazonaws.com/prod/expenses/export?userId=${encodeURIComponent(userId)}`;
+          try {
+            const res = await fetch(exportUrl, {
+              method: 'GET',
+              headers: {
+                'Authorization': token
+              }
+            });
+
+            if (!res.ok) {
+              const err = await res.text();
+              throw new Error(`Server responded with ${res.status}: ${err}`);
+            }
+
+            // Turn response into a Blob (CSV)
+            const blob = await res.blob();
+            const downloadLink = document.createElement('a');
+            const url = window.URL.createObjectURL(blob);
+            downloadLink.href = url;
+            downloadLink.download = `expenses_${userId}.csv`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            window.URL.revokeObjectURL(url);
+          } catch (err) {
+            console.error('❗ Export CSV Error:', err);
+            alert('Error downloading CSV:\n' + err.message);
+          }
+        };
+      }
     });
   </script>
 </body>
