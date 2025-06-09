@@ -51,7 +51,7 @@ advanced-expense-tracker/
 │   ├── cognito-user-pool.png
 │   ├── dynamodb-table.png
 │   ├── lambda-iam-policy.png
-│   └── tracker-screenshot-placeholder.png
+│   └── tracker-dashboard-sample.png
 │
 ├── backend/
 │ ├── AddExpenseFunction.py # Lambda to add a new expense and save to S3
