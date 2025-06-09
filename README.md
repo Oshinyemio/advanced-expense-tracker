@@ -75,7 +75,7 @@ advanced-expense-tracker/
 
 - The `infrastructure/ExpenseTracker_API-prod-oas30.yaml` file contains the exported OpenAPI (YAML) configuration for API Gateway. Import this into any AWS account/region to recreate the same endpoints.  
 - Amazon Cognito User Pool and App Client handle sign-up, sign-in, and JWT issuance.  
-- An S3 bucket (e.g., `expense-tracker-data-ope`) stores JSON expense files and uploaded receipt images.  
+- An S3 bucket (e.g., `user-expense-tracker-data`) stores JSON expense files and uploaded receipt images.  
 - CloudFront distribution serves static frontend assets from S3 with HTTPS and caching.
 
 ---
